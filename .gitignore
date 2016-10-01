@@ -1,0 +1,4 @@
+assets
+config.codekit
+.codekit-cache
+.sass-cache
