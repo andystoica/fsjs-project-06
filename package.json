@@ -1,0 +1,23 @@
+{
+  "name": "fsjs-project-06",
+  "version": "0.0.1",
+  "description": "A content scrapper",
+  "main": "scraper.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andystoica/fsjs-project-06.git"
+  },
+  "author": "Andy Stoica",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andystoica/fsjs-project-06/issues"
+  },
+  "homepage": "https://github.com/andystoica/fsjs-project-06#readme",
+  "dependencies": {
+    "json2csv": "^3.7.0",
+    "node-scrapy": "^0.3.0"
+  }
+}
