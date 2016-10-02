@@ -1,4 +1,3 @@
-// Load modules
 var scrapy = require('node-scrapy'),
     json2csv = require('json2csv'),
     fs = require('fs');
@@ -12,15 +11,15 @@ var productListURL = 'http://www.shirts4mike.com/shirts.php';
  * Scrapes a list of all available T-shirt and generates an
  * array of all URLs to those products
  */
-function getProductList(url) {
+function getProductList(productListURL) {
   // Product list scraper data model
-  var model = { urls : { selector : '.products > li > a',
+  var model = {urls : {selector : '.products > li > a',
                 get : 'href',
-                prefix : 'http://www.shirts4mike.com/' } };
+                prefix : 'http://www.shirts4mike.com/'}};
 
   // Scrap url about all available products
   return new Promise(function(resolve, reject) {
-    scrapy.scrape(url, model, function(err, data) {
+    scrapy.scrape(productListURL, model, function(err, data) {
         // Log scrapping errors if any
         if (err) {
           reject(err);
@@ -39,11 +38,11 @@ function getProductList(url) {
  */
 function getProductDetails(productURL) {
   // Product scraper data model
-  var model = { Title : 'title',
+  var model = {Title : 'title',
                        Price : '.price',
-                       ImageURL : { selector : '.shirt-picture img',
+                       ImageURL : {selector : '.shirt-picture img',
                                get : 'src',
-                               prefix : 'http://www.shirts4mike.com/'} }
+                               prefix : 'http://www.shirts4mike.com/'}};
 
   // Scrap details about a specific product
   return new Promise(function(resolve, reject) {
@@ -51,7 +50,8 @@ function getProductDetails(productURL) {
         // Log scrapping errors if any
         if (err) {
           reject(err);
-        // Add URL and date time stamp to the data object and resolve the promise
+        // Add URL and date time stamp to the data object and resolve
+        // the promise
         } else {
           data.URL = productURL;
           data.Time = new Date().toISOString().replace('T', ' ').substr(0, 19);
@@ -68,7 +68,7 @@ function getProductDetails(productURL) {
  */
 function getAllDetails(productList) {
   return new Promise(function(resolve) {
-    // Create a queue of promisses calls for fetching
+    // Create a queue of promisse calls for fetching
     // all product details from each of the URLs in the list
     var queue = [];
     for (var i = 0; i < productList.length; i++) {
@@ -88,27 +88,27 @@ function getAllDetails(productList) {
  * Export scraped data to CSV File
  */
 function exportCSV(products) {
-var fileDir = './data',
-    fileName = new Date().toISOString().substr(0,10) + '.csv',
-    fields = ['Title', 'Price', 'ImageURL', 'URL', 'Time'];
+  var fileDir = './data',
+      fileName = new Date().toISOString().substr(0,10) + '.csv',
+      fields = ['Title', 'Price', 'ImageURL', 'URL', 'Time'];
 
-    json2csv({ data: products, fields: fields }, function(err, csv) {
-      // Log any CSV generation errors
-      if (err) {
-        logError(err);
-      } else {
-        // Check if the folder exists and create one if it doesn't
-        if (!fs.existsSync(fileDir)) {
-          fs.mkdirSync(fileDir);
-        }
-        // Write the CSV file and log any errors
-        fs.writeFile(fileDir + '/' + fileName, csv, function(err) {
-          if (err) {
-            logError(err);
-          }
-        });
+  json2csv({data: products, fields: fields}, function(err, csv) {
+    // Log any CSV generation errors
+    if (err) {
+      logError(err);
+    } else {
+      // Check if the folder exists and create one if it doesn't
+      if (!fs.existsSync(fileDir)) {
+        fs.mkdirSync(fileDir);
       }
-    });
+      // Write the CSV file and log any errors
+      fs.writeFile(fileDir + '/' + fileName, csv, function(err) {
+        if (err) {
+          logError(err);
+        }
+      });
+    }
+  });
 }
 
 
@@ -118,7 +118,8 @@ var fileDir = './data',
 */
 function logError(err) {
   var errMsg = '[' + new Date().toString() + '] ' + err.message + '\n';
-  // Show the error message on screen
+
+  // Show the error message on stdOut
   console.log(errMsg);
 
   // Write the error to file
@@ -130,7 +131,9 @@ function logError(err) {
 }
 
 
-
+/**
+ * Main function call
+ */
 getProductList(productListURL)
   .then(getAllDetails)
   .then(exportCSV)

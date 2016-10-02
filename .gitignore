@@ -1,5 +1,4 @@
-assets/
+//data/
 node_modules/
+//scraper-error.log
 config.codekit
-.codekit-cache
-.sass-cache
