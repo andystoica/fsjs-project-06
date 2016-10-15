@@ -10,7 +10,10 @@ var productListURL = 'http://www.shirts4mike.com/shirts.php';
 /**
  * Scrapes a list of all available T-shirt and generates an
  * array of all URLs to those products
+ * @param   {String} productListURL - Entry point to product index page
+ * @returns {String|Array|Promise} - List of URLs to all individual products
  */
+
 function getProductList(productListURL) {
   // Product list scraper data model
   var model = {urls : {selector : '.products > li > a',
@@ -35,14 +38,17 @@ function getProductList(productListURL) {
 
 /**
  * Scrapes T-Shirt details from a product specific URL
+ * @param {String} productURL - List of URLs to a product pages
+ * @returns {Object|Promise} - Product data object holding title, price,
+ *                             url, image, and date time scrapped (UTC)
  */
 function getProductDetails(productURL) {
   // Product scraper data model
   var model = {Title : 'title',
-                       Price : '.price',
-                       ImageURL : {selector : '.shirt-picture img',
-                               get : 'src',
-                               prefix : 'http://www.shirts4mike.com/'}};
+               Price : '.price',
+               ImageURL : {selector : '.shirt-picture img',
+                       get : 'src',
+                       prefix : 'http://www.shirts4mike.com/'}};
 
   // Scrap details about a specific product
   return new Promise(function(resolve, reject) {
@@ -65,15 +71,16 @@ function getProductDetails(productURL) {
 
 /**
  * Scrap details for all products in the provided URL list
+ * @param {String|Array} productList - List of all URLs to all product pages
+ * @returns {Object|Array|Promise} - An array of product objects
  */
 function getAllDetails(productList) {
   return new Promise(function(resolve) {
     // Create a queue of promisse calls for fetching
     // all product details from each of the URLs in the list
-    var queue = [];
-    for (var i = 0; i < productList.length; i++) {
-      queue.push(getProductDetails(productList[i]));
-    }
+    var queue = productList.map(function(productURL) {
+      return getProductDetails(productURL);
+    });
     // Once all the promises in the queue have resolved,
     // generate a complete list of products and return it
     Promise.all(queue).then(function(data) {
@@ -86,6 +93,7 @@ function getAllDetails(productList) {
 
 /**
  * Export scraped data to CSV File
+ * @param {Object|Array} products - List of product objects
  */
 function exportCSV(products) {
   var fileDir = './data',
@@ -115,6 +123,7 @@ function exportCSV(products) {
 
 /**
 * Log any error messages to external file
+* @param {Error} - Generic error object
 */
 function logError(err) {
   var errMsg = '[' + new Date().toString() + '] ' + err.message + '\n';
@@ -129,6 +138,7 @@ function logError(err) {
     }
   });
 }
+
 
 
 /**
