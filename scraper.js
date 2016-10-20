@@ -29,13 +29,14 @@ function scrapeURLs(listOfURLs) {
                         err.easy = 'An error occured while accessing '
                         + startURL + '/' + url;
                         reject(err);
-                        // Otherwise, return an array of local URLs
+                    // Otherwise, return an array of local URLs
                     } else {
-                        scrappedURLs = data.urls.filter(function(url) {
+                        scrappedURLs = data.urls
                             // remove non local URLs
-                            return (url.indexOf('http') < 0)
-                            && (!url.includes('./'));
-                        });
+                            .filter(function(url) {
+                                return (url.indexOf('http') < 0)
+                                && (!url.includes('./'));
+                            });
                         // return the list of scraped URLs
                         resolve(scrappedURLs);
                     }
@@ -45,17 +46,17 @@ function scrapeURLs(listOfURLs) {
 
         // When all promises are fulfilled, combine all scrapped URLs
         Promise.all(queue)
-        .then(function(data) {
-            combinedURLs = []
-            // Flatten the results
-            .concat.apply([], data)
-            // Remove duplicates
-            .filter(function(url, index, self) {
-                return index === self.indexOf(url);
-            });
-            resolve(combinedURLs);
-        })
-        .catch(logError);
+            .then(function(data) {
+                combinedURLs = []
+                // Flatten the results
+                .concat.apply([], data)
+                // Remove duplicates
+                .filter(function(url, index, self) {
+                    return index === self.indexOf(url);
+                });
+                resolve(combinedURLs);
+            })
+            .catch(logError);
     });
 }
 
@@ -69,12 +70,12 @@ function scrapeURLs(listOfURLs) {
  */
 function selectProductURLs(listOfURLs) {
     return listOfURLs
-    .filter(function(url) {
-        return url.indexOf('id=') !== -1;
-    })
-    .map(function(url) {
-        return startURL + '/' + url;
-    });
+        .filter(function(url) {
+            return url.indexOf('id=') !== -1;
+        })
+        .map(function(url) {
+            return startURL + '/' + url;
+        });
 }
 
 

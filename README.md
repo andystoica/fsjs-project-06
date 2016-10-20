@@ -14,7 +14,7 @@ You should use npm modules to assist you in the project. You have to research an
 node-scrapy
 ===========
 https://www.npmjs.com/package/node-scrapy
-This scraper module is fairly mature, being developed in 2014, still in active development with a fair share of updates, some quite recent. It is also reasonably popular with about 150+ downloads a month. I chose it because of it's simplicity, after trying a couple other scrapers. The syntax is very straightforward using CSS selector like and it returns the data already formatted for insertion into CSV so it was perfect for my project. It is also well documented cu plenty of examples and many options for customisation if necessary.
+This scraper module is fairly mature, being developed in 2014, still in active development with a fair share of updates, some quite recent. It is also reasonably popular with about 150+ downloads a month. I chose it because of it's simplicity, after trying a couple other scrapers. The syntax is very straightforward using CSS selector like and it returns the data already formatted for insertion into CSV so it was perfect for my project. It is also well documented with plenty of examples and many options for customisation if necessary.
 
 json2csv
 ========
